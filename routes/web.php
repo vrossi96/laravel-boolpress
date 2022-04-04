@@ -16,17 +16,26 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false]);
 
-Route::middleware('auth')
-    ->prefix('admin') // prefisso url es. /admin o admin/posts
-    ->name('admin.') //prefisso nome es. admin.home
-    ->namespace('Admin') //prefisso namespace es. Admin\HomeController@index
-    ->group(function () {
-        Route::get('/', 'HomeController@index')->name('home');
-        Route::get('/tags/{tag}/posts', 'PostController@tagPosts')->name('tags.posts');
+// prefisso url es. /admin o admin/posts
+//prefisso nome es. admin.home
+//prefisso namespace es. Admin\HomeController@index
+Route::middleware('auth')->prefix('admin')->name('admin.')->namespace('Admin')->group(function () {
+    Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/tags/{tag}/posts', 'PostController@tagPosts')->name('tags.posts');
 
-        Route::resource('categories', 'CategoryController');
-        Route::resource('posts', 'PostController');
-    });
+    Route::resource('categories', 'CategoryController');
+    Route::resource('posts', 'PostController');
+    Route::get('/{any}', function () {
+        abort(404);
+    })->where('any', '.*');
+});
+
+
+Route::namespace('Api')->group(function () {
+    Route::resource('posts', 'PostController');
+    return view('guest.home');
+});
+
 
 Route::get('{any?}', function () {
     return view('guest.home');
