@@ -1938,7 +1938,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.get("http://localhost:8000/api/posts").then(function (res) {
-        _this.posts = res.data.posts;
+        _this.posts = res.data.data;
       })["catch"](function (err) {
         console.error(err);
       }).then(function () {
