@@ -18,7 +18,7 @@
          color: #636b6f;
          font-family: 'Nunito', sans-serif;
          font-weight: 200;
-         height: 100vh;
+         min-height: 100vh;
          margin: 0;
       }
 
@@ -66,6 +66,7 @@
 
    </style>
    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
 </head>
 
 <body>

@@ -1,27 +1,45 @@
 <template>
    <div>
       <Header />
-      <div class="container">
-         <div class="row justify-content-center">
-            <div class="col-md-8">
-               <div class="card mt-5">
-                  <div class="card-header">Work in Progress</div>
-
-                  <div class="card-body">Log in to start</div>
-               </div>
-            </div>
-         </div>
-      </div>
+      <PostList :posts="posts" />
    </div>
 </template>
 
 <script>
-import Header from "./components/Header.vue";
+import Header from "./Header.vue";
+import Loader from "./Loader.vue";
+import PostList from "./posts/PostList.vue";
 
 export default {
    name: "App",
    components: {
       Header,
+      Loader,
+      PostList,
+   },
+   data() {
+      return {
+         posts: [],
+      };
+   },
+   methods: {
+      getPosts() {
+         axios
+            .get("http://localhost:8000/api/posts")
+            .then((res) => {
+               this.posts = res.data.posts;
+            })
+            .catch((err) => {
+               console.error(err);
+            })
+            .then(() => {
+               console.log("OK API");
+               console.log(this.posts);
+            });
+      },
+   },
+   mounted() {
+      this.getPosts();
    },
 };
 </script>

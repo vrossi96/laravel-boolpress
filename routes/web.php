@@ -30,13 +30,6 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->namespace('Admin')->
     })->where('any', '.*');
 });
 
-
-Route::namespace('Api')->group(function () {
-    Route::resource('posts', 'PostController');
-    return view('guest.home');
-});
-
-
 Route::get('{any?}', function () {
     return view('guest.home');
 })->where('any', '.*');
