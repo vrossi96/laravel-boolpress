@@ -8,7 +8,12 @@
             </div>
          </div>
          <div class="row">
-            <PostCard v-for="post in posts" :key="post.id" :post="post" />
+            <PostCard
+               v-for="post in posts"
+               :key="post.id"
+               :post="post"
+               :onShow="onShow"
+            />
          </div>
       </div>
    </div>
@@ -32,6 +37,7 @@ export default {
          posts: [],
          pages: {},
          is_loading: false,
+         onShow: true,
       };
    },
    methods: {

@@ -2,8 +2,22 @@
    <div class="col-6 my-3">
       <div class="card">
          <img v-if="post.img" class="card-img-top" src="#" :alt="post.slug" />
-         <div class="card-header bg-dark">
+         <div
+            class="
+               card-header
+               bg-dark
+               d-flex
+               align-items-center
+               justify-content-between
+            "
+         >
             <h5 class="card-title m-0">{{ post.title }}</h5>
+            <router-link
+               v-if="onShow"
+               class="btn btn-sm btn-secondary"
+               :to="{ name: 'post-details', params: { slug: post.slug } }"
+               >Details</router-link
+            >
          </div>
          <div class="card-body bg-secondary">
             <p class="card-text">
@@ -40,7 +54,10 @@
 <script>
 export default {
    name: "PostCard",
-   props: ["post"],
+   props: ["post", "onShow"],
+   data() {
+      return {};
+   },
 };
 </script>
 

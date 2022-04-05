@@ -1,19 +1,21 @@
 <template>
    <div>
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-         <a class="navbar-brand" href="#">Laravel Boolpress</a>
+         <router-link class="navbar-brand" to="/"
+            >Laravel Boolpress</router-link
+         >
          <button class="navbar-toggler" type="button">
             <span class="navbar-toggler-icon"></span>
          </button>
 
          <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-               <li class="nav-item active">
+               <li class="nav-item">
                   <router-link class="nav-link" :to="{ name: 'home' }"
                      >Posts</router-link
                   >
                </li>
-               <li class="nav-item active">
+               <li class="nav-item">
                   <router-link class="nav-link" :to="{ name: 'contacts' }"
                      >Contacts</router-link
                   >

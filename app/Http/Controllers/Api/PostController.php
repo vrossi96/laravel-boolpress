@@ -16,7 +16,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::orderBy('updated_at', 'DESC')->with('user', 'tags', 'category')->paginate(10);
+        $posts = Post::orderBy('updated_at', 'DESC')->with(['user', 'tags', 'category'])->paginate(10);
 
         return response()->json($posts);
     }
@@ -38,9 +38,11 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        //
+        $post = Post::where('slug', $slug)->with(['user', 'tags', 'category'])->first();
+        if (!$post) return response('Post Not Found', 404);
+        return response()->json($post);
     }
 
     /**
