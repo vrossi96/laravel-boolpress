@@ -1934,6 +1934,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       posts: [],
+      pages: {},
       is_loading: true
     };
   },
@@ -1941,8 +1942,17 @@ __webpack_require__.r(__webpack_exports__);
     getPosts: function getPosts() {
       var _this = this;
 
-      axios.get("http://localhost:8000/api/posts").then(function (res) {
-        _this.posts = res.data.data;
+      var pg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      axios.get("http://localhost:8000/api/posts?page=" + pg).then(function (res) {
+        var _res$data = res.data,
+            data = _res$data.data,
+            current_page = _res$data.current_page,
+            last_page = _res$data.last_page;
+        _this.posts = data;
+        _this.pages = {
+          currentPage: current_page,
+          lastPage: last_page
+        };
       })["catch"](function (err) {
         console.error(err);
       }).then(function () {
@@ -2104,13 +2114,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostList",
   components: {
     PostCard: _PostCard_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ["posts"]
+  props: ["posts", "pages"]
 });
 
 /***/ }),
@@ -38454,7 +38486,7 @@ var render = function () {
         [
           _vm.is_loading
             ? _c("Loader")
-            : _c("PostList", { attrs: { posts: _vm.posts } }),
+            : _c("PostList", { attrs: { posts: _vm.posts, pages: _vm.pages } }),
         ],
         1
       ),
@@ -38665,6 +38697,41 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-12" }, [
+        _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
+          _c(
+            "ul",
+            { staticClass: "pagination" },
+            [
+              _vm._m(0),
+              _vm._v(" "),
+              _vm._l(_vm.pages.lastPage, function (page) {
+                return _c(
+                  "li",
+                  {
+                    key: page,
+                    staticClass: "page-item",
+                    class: { active: page === _vm.pages.currentPage },
+                  },
+                  [
+                    _c(
+                      "a",
+                      { staticClass: "page-link", attrs: { href: "#" } },
+                      [_vm._v(_vm._s(page))]
+                    ),
+                  ]
+                )
+              }),
+              _vm._v(" "),
+              _vm._m(1),
+            ],
+            2
+          ),
+        ]),
+      ]),
+    ]),
+    _vm._v(" "),
     _c(
       "div",
       { staticClass: "row" },
@@ -38675,7 +38742,28 @@ var render = function () {
     ),
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "page-item" }, [
+      _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+        _vm._v("Previous"),
+      ]),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "page-item" }, [
+      _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+        _vm._v("Next"),
+      ]),
+    ])
+  },
+]
 render._withStripped = true
 
 

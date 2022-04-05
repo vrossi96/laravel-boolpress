@@ -3,7 +3,7 @@
       <Header />
       <div>
          <Loader v-if="is_loading" />
-         <PostList v-else :posts="posts" />
+         <PostList v-else :posts="posts" :pages="pages" />
       </div>
    </div>
 </template>
@@ -23,15 +23,21 @@ export default {
    data() {
       return {
          posts: [],
+         pages: {},
          is_loading: true,
       };
    },
    methods: {
-      getPosts() {
+      getPosts(pg = 1) {
          axios
-            .get("http://localhost:8000/api/posts")
+            .get("http://localhost:8000/api/posts?page=" + pg)
             .then((res) => {
-               this.posts = res.data.data;
+               const { data, current_page, last_page } = res.data;
+               this.posts = data;
+               this.pages = {
+                  currentPage: current_page,
+                  lastPage: last_page,
+               };
             })
             .catch((err) => {
                console.error(err);
