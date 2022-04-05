@@ -1,51 +1,64 @@
 <template>
    <div class="container">
-      <div class="row">
-         <div class="col-12">
-            <nav>
-               <ul class="pagination">
-                  <li
-                     class="page-item"
-                     v-if="pages.currentPage > 1"
-                     @click="$emit('change-page', pages.currentPage - 1)"
-                  >
-                     <a class="page-link" href="#">Previous</a>
-                  </li>
-                  <li
-                     v-for="page in pages.lastPage"
-                     :key="page"
-                     class="page-item"
-                     :class="{ active: page === pages.currentPage }"
-                     @click="$emit('change-page', page)"
-                  >
-                     <span role="button" class="page-link">{{ page }}</span>
-                  </li>
-                  <li
-                     class="page-item"
-                     v-if="pages.lastPage > pages.currentPage"
-                     @click="$emit('change-page', pages.currentPage + 1)"
-                  >
-                     <a class="page-link" href="#">Next</a>
-                  </li>
-               </ul>
-            </nav>
+      <Loader v-if="is_loading" />
+      <div>
+         <div class="row">
+            <div class="col-12">
+               <PageNavigation :pages="pages" @change-page="getPosts" />
+            </div>
          </div>
-      </div>
-      <div class="row">
-         <PostCard v-for="post in posts" :key="post.id" :post="post" />
+         <div class="row">
+            <PostCard v-for="post in posts" :key="post.id" :post="post" />
+         </div>
       </div>
    </div>
 </template>
 
 <script>
 import PostCard from "./PostCard.vue";
+import Loader from "../Loader.vue";
+import PageNavigation from "./PageNavigation.vue";
 
 export default {
    name: "PostList",
    components: {
       PostCard,
+      Loader,
+      PageNavigation,
    },
-   props: ["posts", "pages"],
+   props: [],
+   data() {
+      return {
+         posts: [],
+         pages: {},
+         is_loading: false,
+      };
+   },
+   methods: {
+      getPosts(pg = 1) {
+         this.is_loading = true;
+         axios
+            .get("http://localhost:8000/api/posts?page=" + pg)
+            .then((res) => {
+               const { data, current_page, last_page } = res.data;
+               this.posts = data;
+               this.pages = {
+                  currentPage: current_page,
+                  lastPage: last_page,
+               };
+            })
+            .catch((err) => {
+               console.error(err);
+            })
+            .then(() => {
+               console.log("OK API");
+               this.is_loading = false;
+            });
+      },
+   },
+   mounted() {
+      this.getPosts();
+   },
 };
 </script>
 
