@@ -1,6 +1,11 @@
 <template>
-   <div>
-      <h1>Error</h1>
+   <div class="container">
+      <div>
+         <h1>Page not found</h1>
+         <button class="btn btn-primary" @click="$router.back()">
+            Go Back
+         </button>
+      </div>
    </div>
 </template>
 
