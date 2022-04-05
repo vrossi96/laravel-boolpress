@@ -1,7 +1,10 @@
 <template>
    <div>
       <Header />
-      <PostList :posts="posts" />
+      <div>
+         <Loader v-if="is_loading" />
+         <PostList v-else :posts="posts" />
+      </div>
    </div>
 </template>
 
@@ -20,6 +23,7 @@ export default {
    data() {
       return {
          posts: [],
+         is_loading: true,
       };
    },
    methods: {
@@ -34,7 +38,7 @@ export default {
             })
             .then(() => {
                console.log("OK API");
-               console.log(this.posts);
+               this.is_loading = false;
             });
       },
    },
