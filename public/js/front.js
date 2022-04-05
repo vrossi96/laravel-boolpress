@@ -1921,6 +1921,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -1935,7 +1940,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       posts: [],
       pages: {},
-      is_loading: true
+      is_loading: false
     };
   },
   methods: {
@@ -1943,6 +1948,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var pg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.is_loading = true;
       axios.get("http://localhost:8000/api/posts?page=" + pg).then(function (res) {
         var _res$data = res.data,
             data = _res$data.data,
@@ -2106,6 +2112,15 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PostCard_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PostCard.vue */ "./resources/js/components/posts/PostCard.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -38486,7 +38501,10 @@ var render = function () {
         [
           _vm.is_loading
             ? _c("Loader")
-            : _c("PostList", { attrs: { posts: _vm.posts, pages: _vm.pages } }),
+            : _c("PostList", {
+                attrs: { posts: _vm.posts, pages: _vm.pages },
+                on: { "change-page": _vm.getPosts },
+              }),
         ],
         1
       ),
@@ -38699,12 +38717,34 @@ var render = function () {
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-12" }, [
-        _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
+        _c("nav", [
           _c(
             "ul",
             { staticClass: "pagination" },
             [
-              _vm._m(0),
+              _vm.pages.currentPage > 1
+                ? _c(
+                    "li",
+                    {
+                      staticClass: "page-item",
+                      on: {
+                        click: function ($event) {
+                          return _vm.$emit(
+                            "change-page",
+                            _vm.pages.currentPage - 1
+                          )
+                        },
+                      },
+                    },
+                    [
+                      _c(
+                        "a",
+                        { staticClass: "page-link", attrs: { href: "#" } },
+                        [_vm._v("Previous")]
+                      ),
+                    ]
+                  )
+                : _vm._e(),
               _vm._v(" "),
               _vm._l(_vm.pages.lastPage, function (page) {
                 return _c(
@@ -38713,18 +38753,45 @@ var render = function () {
                     key: page,
                     staticClass: "page-item",
                     class: { active: page === _vm.pages.currentPage },
+                    on: {
+                      click: function ($event) {
+                        return _vm.$emit("change-page", page)
+                      },
+                    },
                   },
                   [
                     _c(
-                      "a",
-                      { staticClass: "page-link", attrs: { href: "#" } },
+                      "span",
+                      { staticClass: "page-link", attrs: { role: "button" } },
                       [_vm._v(_vm._s(page))]
                     ),
                   ]
                 )
               }),
               _vm._v(" "),
-              _vm._m(1),
+              _vm.pages.lastPage > _vm.pages.currentPage
+                ? _c(
+                    "li",
+                    {
+                      staticClass: "page-item",
+                      on: {
+                        click: function ($event) {
+                          return _vm.$emit(
+                            "change-page",
+                            _vm.pages.currentPage + 1
+                          )
+                        },
+                      },
+                    },
+                    [
+                      _c(
+                        "a",
+                        { staticClass: "page-link", attrs: { href: "#" } },
+                        [_vm._v("Next")]
+                      ),
+                    ]
+                  )
+                : _vm._e(),
             ],
             2
           ),
@@ -38742,28 +38809,7 @@ var render = function () {
     ),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "page-item" }, [
-      _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
-        _vm._v("Previous"),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "page-item" }, [
-      _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
-        _vm._v("Next"),
-      ]),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

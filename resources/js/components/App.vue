@@ -3,7 +3,12 @@
       <Header />
       <div>
          <Loader v-if="is_loading" />
-         <PostList v-else :posts="posts" :pages="pages" />
+         <PostList
+            v-else
+            :posts="posts"
+            :pages="pages"
+            @change-page="getPosts"
+         />
       </div>
    </div>
 </template>
@@ -24,11 +29,12 @@ export default {
       return {
          posts: [],
          pages: {},
-         is_loading: true,
+         is_loading: false,
       };
    },
    methods: {
       getPosts(pg = 1) {
+         this.is_loading = true;
          axios
             .get("http://localhost:8000/api/posts?page=" + pg)
             .then((res) => {

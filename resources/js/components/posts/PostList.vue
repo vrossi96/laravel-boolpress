@@ -2,9 +2,13 @@
    <div class="container">
       <div class="row">
          <div class="col-12">
-            <nav aria-label="Page navigation example">
+            <nav>
                <ul class="pagination">
-                  <li class="page-item">
+                  <li
+                     class="page-item"
+                     v-if="pages.currentPage > 1"
+                     @click="$emit('change-page', pages.currentPage - 1)"
+                  >
                      <a class="page-link" href="#">Previous</a>
                   </li>
                   <li
@@ -12,10 +16,15 @@
                      :key="page"
                      class="page-item"
                      :class="{ active: page === pages.currentPage }"
+                     @click="$emit('change-page', page)"
                   >
-                     <a class="page-link" href="#">{{ page }}</a>
+                     <span role="button" class="page-link">{{ page }}</span>
                   </li>
-                  <li class="page-item">
+                  <li
+                     class="page-item"
+                     v-if="pages.lastPage > pages.currentPage"
+                     @click="$emit('change-page', pages.currentPage + 1)"
+                  >
                      <a class="page-link" href="#">Next</a>
                   </li>
                </ul>
