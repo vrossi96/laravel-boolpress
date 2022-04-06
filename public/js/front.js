@@ -2089,6 +2089,10 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _posts_PostCard_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../posts/PostCard.vue */ "./resources/js/components/posts/PostCard.vue");
+/* harmony import */ var _Loader_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Loader.vue */ "./resources/js/components/Loader.vue");
+//
+//
+//
 //
 //
 //
@@ -2101,13 +2105,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostShow",
   components: {
-    PostCard: _posts_PostCard_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    PostCard: _posts_PostCard_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    Loader: _Loader_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   data: function data() {
     return {
+      is_loading: false,
       post: [],
       onShow: false
     };
@@ -2116,11 +2123,14 @@ __webpack_require__.r(__webpack_exports__);
     getPost: function getPost() {
       var _this = this;
 
+      this.is_loading = true;
       axios.get("http://localhost:8000/api/posts/" + this.$route.params.slug).then(function (res) {
         _this.post = res.data;
       })["catch"](function (err) {
         console.error(err);
-      }).then(function () {});
+      }).then(function () {
+        _this.is_loading = false;
+      });
     }
   },
   mounted: function mounted() {
@@ -2236,8 +2246,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostCard",
   props: ["post", "onShow"],
@@ -2260,6 +2268,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PostCard_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PostCard.vue */ "./resources/js/components/posts/PostCard.vue");
 /* harmony import */ var _Loader_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Loader.vue */ "./resources/js/components/Loader.vue");
 /* harmony import */ var _PageNavigation_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PageNavigation.vue */ "./resources/js/components/posts/PageNavigation.vue");
+//
+//
 //
 //
 //
@@ -38908,24 +38918,24 @@ var render = function () {
       "div",
       { staticClass: "row" },
       [
-        _vm._m(0),
+        _c("div", { staticClass: "col-12 my-3" }, [
+          _c("h1", [_vm._v('Post "' + _vm._s(_vm.post.title) + '" Details')]),
+        ]),
         _vm._v(" "),
-        _c("PostCard", { attrs: { post: _vm.post, onShow: _vm.onShow } }),
+        _vm.is_loading ? _c("Loader") : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-6 offset-3 my-3" },
+          [_c("PostCard", { attrs: { post: _vm.post, onShow: _vm.onShow } })],
+          1
+        ),
       ],
       1
     ),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-12" }, [
-      _c("h1", [_vm._v("Post Details")]),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -39039,86 +39049,81 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "col-6 my-3" }, [
-    _c("div", { staticClass: "card" }, [
-      _vm.post.img
-        ? _c("img", {
-            staticClass: "card-img-top",
-            attrs: { src: "#", alt: _vm.post.slug },
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass:
-            "\n            card-header\n            bg-dark\n            d-flex\n            align-items-center\n            justify-content-between\n         ",
-        },
-        [
-          _c("h5", { staticClass: "card-title m-0" }, [
-            _vm._v(_vm._s(_vm.post.title)),
-          ]),
-          _vm._v(" "),
-          _vm.onShow
-            ? _c(
-                "router-link",
-                {
-                  staticClass: "btn btn-sm btn-secondary",
-                  attrs: {
-                    to: {
-                      name: "post-details",
-                      params: { slug: _vm.post.slug },
-                    },
-                  },
-                },
-                [_vm._v("Details")]
-              )
-            : _vm._e(),
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-body bg-secondary" }, [
-        _c("p", { staticClass: "card-text" }, [
-          _vm._v("\n            " + _vm._s(_vm.post.content) + "\n         "),
+  return _c("div", { staticClass: "card" }, [
+    _vm.post.img
+      ? _c("img", {
+          staticClass: "card-img-top",
+          attrs: { src: "#", alt: _vm.post.slug },
+        })
+      : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass:
+          "\n         card-header\n         bg-dark\n         d-flex\n         align-items-center\n         justify-content-between\n      ",
+      },
+      [
+        _c("h5", { staticClass: "card-title m-0" }, [
+          _vm._v(_vm._s(_vm.post.title)),
         ]),
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-footer bg-dark" }, [
-        _c(
-          "div",
-          { staticClass: "d-flex align-items-center justify-content-between" },
-          [
-            _c(
-              "span",
+        _vm._v(" "),
+        _vm.onShow
+          ? _c(
+              "router-link",
               {
-                staticClass: "badge badge-pill",
-                style: {
-                  "background-color": _vm.post.category.color,
-                  color: "#fff",
+                staticClass: "btn btn-sm btn-secondary",
+                attrs: {
+                  to: { name: "post-details", params: { slug: _vm.post.slug } },
                 },
               },
-              [_vm._v(_vm._s(_vm.post.category.name))]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              _vm._l(_vm.post.tags, function (tag) {
-                return _c(
-                  "span",
-                  {
-                    key: tag.id,
-                    staticClass: "badge badge-pill ml-2",
-                    style: { "background-color": tag.color, color: "#fff" },
-                  },
-                  [_vm._v(_vm._s(tag.name))]
-                )
-              }),
-              0
-            ),
-          ]
-        ),
+              [_vm._v("Details")]
+            )
+          : _vm._e(),
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-body bg-secondary" }, [
+      _c("p", { staticClass: "card-text" }, [
+        _vm._v("\n         " + _vm._s(_vm.post.content) + "\n      "),
       ]),
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-footer bg-dark" }, [
+      _c(
+        "div",
+        { staticClass: "d-flex align-items-center justify-content-between" },
+        [
+          _c(
+            "span",
+            {
+              staticClass: "badge badge-pill",
+              style: {
+                "background-color": _vm.post.category.color,
+                color: "#fff",
+              },
+            },
+            [_vm._v(_vm._s(_vm.post.category.name))]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            _vm._l(_vm.post.tags, function (tag) {
+              return _c(
+                "span",
+                {
+                  key: tag.id,
+                  staticClass: "badge badge-pill ml-2",
+                  style: { "background-color": tag.color, color: "#fff" },
+                },
+                [_vm._v(_vm._s(tag.name))]
+              )
+            }),
+            0
+          ),
+        ]
+      ),
     ]),
   ])
 }
@@ -39165,17 +39170,19 @@ var render = function () {
           ),
         ]),
         _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "row" },
-          _vm._l(_vm.posts, function (post) {
-            return _c("PostCard", {
-              key: post.id,
-              attrs: { post: post, onShow: _vm.onShow },
-            })
-          }),
-          1
-        ),
+        _c("div", { staticClass: "row" }, [
+          _c(
+            "div",
+            { staticClass: "col-6 my-3" },
+            _vm._l(_vm.posts, function (post) {
+              return _c("PostCard", {
+                key: post.id,
+                attrs: { post: post, onShow: _vm.onShow },
+              })
+            }),
+            1
+          ),
+        ]),
       ]),
     ],
     1

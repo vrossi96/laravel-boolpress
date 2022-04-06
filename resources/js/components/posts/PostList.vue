@@ -8,12 +8,14 @@
             </div>
          </div>
          <div class="row">
-            <PostCard
-               v-for="post in posts"
-               :key="post.id"
-               :post="post"
-               :onShow="onShow"
-            />
+            <div class="col-6 my-3">
+               <PostCard
+                  v-for="post in posts"
+                  :key="post.id"
+                  :post="post"
+                  :onShow="onShow"
+               />
+            </div>
          </div>
       </div>
    </div>
