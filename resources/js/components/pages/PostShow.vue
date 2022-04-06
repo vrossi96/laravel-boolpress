@@ -4,7 +4,12 @@
          <div class="col-12 my-3">
             <h1>Post "{{ post.title }}" Details</h1>
          </div>
-         <Loader v-if="is_loading" />
+         <div class="col-12">
+            <Alert v-if="isError && !isLoading" :type="error.type">
+               <p class="m-0">{{ error.message }}</p>
+            </Alert>
+         </div>
+         <Loader v-if="isLoading" />
          <div class="col-6 offset-3 my-3">
             <PostCard :post="post" :onShow="onShow" />
          </div>
@@ -15,23 +20,30 @@
 <script>
 import PostCard from "../posts/PostCard.vue";
 import Loader from "../Loader.vue";
+import Alert from "../Alert.vue";
 
 export default {
    name: "PostShow",
    components: {
       PostCard,
       Loader,
+      Alert,
    },
    data() {
       return {
-         is_loading: false,
+         isError: false,
+         isLoading: false,
+         error: {
+            message: "An error has occurred",
+            type: "danger",
+         },
          post: [],
          onShow: false,
       };
    },
    methods: {
       getPost() {
-         this.is_loading = true;
+         this.isLoading = true;
          axios
             .get("http://localhost:8000/api/posts/" + this.$route.params.slug)
             .then((res) => {
@@ -39,9 +51,10 @@ export default {
             })
             .catch((err) => {
                console.error(err);
+               this.isError = true;
             })
             .then(() => {
-               this.is_loading = false;
+               this.isLoading = false;
             });
       },
    },
