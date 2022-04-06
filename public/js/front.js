@@ -2043,7 +2043,27 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Alert_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Alert.vue */ "./resources/js/components/Alert.vue");
+/* harmony import */ var _Loader_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Loader.vue */ "./resources/js/components/Loader.vue");
+/* harmony import */ var _Alert_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Alert.vue */ "./resources/js/components/Alert.vue");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_2__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2095,10 +2115,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Contacts",
   components: {
-    Alert: _Alert_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Loader: _Loader_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    Alert: _Alert_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   data: function data() {
     return {
@@ -2107,25 +2130,58 @@ __webpack_require__.r(__webpack_exports__);
         message: ""
       },
       alert: {
-        message: "",
-        type: ""
-      }
+        message: ""
+      },
+      errors: {},
+      isLoading: false
     };
   },
   methods: {
+    validateForm: function validateForm() {
+      // Reset alerts
+      this.alert.message = "";
+      var errors = {}; // VALIDATION
+
+      if (!this.form.email.trim()) errors.email = "Mail is required";
+      if (!this.form.message.trim()) errors.message = "Message is required";
+      /* if (
+         this.form.email.trim() &&
+         this.form.email.match(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
+      )
+         errors.email = "The mail is invalid"; */
+
+      this.errors = errors;
+    },
     sendForm: function sendForm() {
       var _this = this;
 
+      this.validateForm();
       var params = {
         email: this.form.email,
         message: this.form.message
       };
-      axios.post("http://localhost:8000/api/messages", params).then(function (res) {
-        _this.form.email = "";
-        _this.form.message = "";
-        _this.alert.message = "Message sent!";
-        _this.alert.type = "success";
-      })["catch"](function (err) {}).then(function () {});
+
+      if (!this.hasErrors) {
+        // Loading
+        this.isLoading = true;
+        axios.post("http://localhost:8000/api/messages", params).then(function (res) {
+          _this.form.email = "";
+          _this.form.message = "";
+          _this.alert.message = "Message sent!";
+        })["catch"](function (err) {
+          console.log(err.response.status);
+          _this.errors = {
+            message: "An error has occurred"
+          };
+        }).then(function () {
+          _this.isLoading = false;
+        });
+      }
+    }
+  },
+  computed: {
+    hasErrors: function hasErrors() {
+      return !Object(lodash__WEBPACK_IMPORTED_MODULE_2__["isEmpty"])(this.errors);
     }
   }
 });
@@ -2418,7 +2474,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       posts: [],
       pages: {},
-      is_loading: false,
+      isLoading: false,
       onShow: true
     };
   },
@@ -2427,7 +2483,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var pg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      this.is_loading = true;
+      this.isLoading = true;
       axios.get("http://localhost:8000/api/posts?page=" + pg).then(function (res) {
         var _res$data = res.data,
             data = _res$data.data,
@@ -2442,7 +2498,7 @@ __webpack_require__.r(__webpack_exports__);
         console.error(err);
       }).then(function () {
         console.log("OK API");
-        _this.is_loading = false;
+        _this.isLoading = false;
       });
     }
   },
@@ -6832,7 +6888,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "#loader-box[data-v-e79ec684] {\n  position: fixed;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n#loader-box .spinner-border[data-v-e79ec684] {\n  height: 150px;\n  width: 150px;\n}", ""]);
+exports.push([module.i, "#loader-box[data-v-e79ec684] {\n  z-index: 1;\n  position: fixed;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n#loader-box .spinner-border[data-v-e79ec684] {\n  height: 150px;\n  width: 150px;\n}", ""]);
 
 // exports
 
@@ -38979,12 +39035,35 @@ var render = function () {
         ),
       ]),
       _vm._v(" "),
-      _vm.alert.message
-        ? _c("Alert", { attrs: { type: _vm.alert.type } }, [
-            _c("p", { staticClass: "m-0" }, [
-              _vm._v(_vm._s(_vm.alert.message)),
-            ]),
-          ])
+      _vm.isLoading ? _c("Loader") : _vm._e(),
+      _vm._v(" "),
+      _vm.alert.message || _vm.hasErrors
+        ? _c(
+            "Alert",
+            { attrs: { type: _vm.hasErrors ? "danger" : "success" } },
+            [
+              _vm.alert.message
+                ? _c("p", { staticClass: "m-0" }, [
+                    _vm._v(_vm._s(_vm.alert.message)),
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.hasErrors
+                ? _c(
+                    "ul",
+                    { staticClass: "m-0" },
+                    _vm._l(_vm.errors, function (value, key) {
+                      return _c("li", { key: key }, [
+                        _vm._v(
+                          "\n            " + _vm._s(value) + "\n         "
+                        ),
+                      ])
+                    }),
+                    0
+                  )
+                : _vm._e(),
+            ]
+          )
         : _vm._e(),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
@@ -39002,6 +39081,7 @@ var render = function () {
                 },
               ],
               staticClass: "form-control",
+              class: { "is-invalid": _vm.errors.email },
               attrs: {
                 type: "email",
                 id: "email",
@@ -39018,18 +39098,26 @@ var render = function () {
               },
             }),
             _vm._v(" "),
-            _c(
-              "small",
-              {
-                staticClass: "form-text text-muted",
-                attrs: { id: "emailHelp" },
-              },
-              [
-                _vm._v(
-                  "We'll never share your email with anyone else, just with our\n               coworkers!"
+            _vm.errors.email
+              ? _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    "\n               " +
+                      _vm._s(_vm.errors.email) +
+                      "\n            "
+                  ),
+                ])
+              : _c(
+                  "small",
+                  {
+                    staticClass: "form-text text-muted",
+                    attrs: { id: "emailHelp" },
+                  },
+                  [
+                    _vm._v(
+                      "We'll never share your email with anyone else, just with our\n               coworkers!"
+                    ),
+                  ]
                 ),
-              ]
-            ),
           ]),
         ]),
         _vm._v(" "),
@@ -39047,6 +39135,7 @@ var render = function () {
                 },
               ],
               staticClass: "form-control",
+              class: { "is-invalid": _vm.errors.message },
               attrs: { id: "message", rows: "9" },
               domProps: { value: _vm.form.message },
               on: {
@@ -39059,14 +39148,22 @@ var render = function () {
               },
             }),
             _vm._v(" "),
-            _c(
-              "small",
-              {
-                staticClass: "form-text text-muted",
-                attrs: { id: "messageHelp" },
-              },
-              [_vm._v("U can tell us, don't be shy.")]
-            ),
+            _vm.errors.message
+              ? _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    "\n               " +
+                      _vm._s(_vm.errors.message) +
+                      "\n            "
+                  ),
+                ])
+              : _c(
+                  "small",
+                  {
+                    staticClass: "form-text text-muted",
+                    attrs: { id: "messageHelp" },
+                  },
+                  [_vm._v("U can tell us, don't be shy.")]
+                ),
           ]),
         ]),
         _vm._v(" "),
@@ -39424,7 +39521,7 @@ var render = function () {
     "div",
     { staticClass: "container" },
     [
-      _vm.is_loading ? _c("Loader") : _vm._e(),
+      _vm.isLoading ? _c("Loader") : _vm._e(),
       _vm._v(" "),
       _c("div", [
         _c("div", { staticClass: "row" }, [

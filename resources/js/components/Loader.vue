@@ -14,6 +14,7 @@ export default {
 
 <style lang="scss" scoped>
 #loader-box {
+   z-index: 1;
    position: fixed;
    top: 0;
    right: 0;

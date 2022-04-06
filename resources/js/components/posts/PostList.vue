@@ -1,6 +1,6 @@
 <template>
    <div class="container">
-      <Loader v-if="is_loading" />
+      <Loader v-if="isLoading" />
       <div>
          <div class="row">
             <div class="col-12">
@@ -33,13 +33,13 @@ export default {
       return {
          posts: [],
          pages: {},
-         is_loading: false,
+         isLoading: false,
          onShow: true,
       };
    },
    methods: {
       getPosts(pg = 1) {
-         this.is_loading = true;
+         this.isLoading = true;
          axios
             .get("http://localhost:8000/api/posts?page=" + pg)
             .then((res) => {
@@ -55,7 +55,7 @@ export default {
             })
             .then(() => {
                console.log("OK API");
-               this.is_loading = false;
+               this.isLoading = false;
             });
       },
    },
