@@ -2286,11 +2286,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 
@@ -39170,19 +39165,19 @@ var render = function () {
           ),
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
-          _c(
-            "div",
-            { staticClass: "col-6 my-3" },
-            _vm._l(_vm.posts, function (post) {
-              return _c("PostCard", {
-                key: post.id,
-                attrs: { post: post, onShow: _vm.onShow },
-              })
-            }),
-            1
-          ),
-        ]),
+        _c(
+          "div",
+          { staticClass: "row" },
+          _vm._l(_vm.posts, function (post) {
+            return _c(
+              "div",
+              { key: post.id, staticClass: "col-6 my-3" },
+              [_c("PostCard", { attrs: { post: post, onShow: _vm.onShow } })],
+              1
+            )
+          }),
+          0
+        ),
       ]),
     ],
     1
